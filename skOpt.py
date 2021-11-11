@@ -1,4 +1,4 @@
-import numpy as np
+import os
 
 from skopt import gp_minimize
 from skopt.space import Real, Integer, Categorical
@@ -7,111 +7,17 @@ from skopt.utils import use_named_args
 import torch
 import torch.utils.data
 
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
 from common.data_preperation import prepare_data
+from pathmanager import get_results_path
 
-"""
-from ray import tune
-from ray.tune.suggest.bayesopt import BayesOptSearch
-from rayTune_bayesOpt.data_preperation import prepare_data
-from rayTune_bayesOpt.constants import random_seed
-"""
+from model.model import Net
+
 
 best_mse = 100
 
-class Net(torch.nn.Module):
-    """
-    PyTorch offers several ways to construct neural networks.
-    Here we choose to implement the network as a Module class.
-    This gives us full control over the construction and clarifies our intentions.
-    """
-
-    def __init__(self, inputs: int, hidden_layers: float, hidden_layer_width: float, outputs: int):
-        """
-
-        :param inputs:
-        :param hidden_layers:
-        :param hidden_layer_width:
-        :param outputs:
-        """
-        super().__init__()
-
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-        _hl = int(hidden_layers)
-        _hlw = int(hidden_layer_width)
-
-        layers = [inputs] + [_hlw]*_hl + [outputs]
-
-        assert len(layers) >= 2, "At least two layers are required (incl. input and output layer)"
-        self.layers = layers
-
-        # Fully connected linear layers
-        linear_layers = []
-
-        for i in range(len(self.layers) - 1):
-            n_in = self.layers[i]
-            n_out = self.layers[i + 1]
-            layer = torch.nn.Linear(n_in, n_out)
-
-            # Initialize weights and biases
-            a = 1 if i == 0 else 2
-            layer.weight.data = torch.randn((n_out, n_in)) * np.sqrt(a / n_in)
-            layer.bias.data = torch.zeros(n_out)
-
-            # Add to list
-            linear_layers.append(layer)
-
-        # Modules/layers must be registered to enable saving of model
-        self.linear_layers = torch.nn.ModuleList(linear_layers)
-
-        # Non-linearity (e.g. ReLU, ELU, or SELU)
-        self.act = torch.nn.ReLU(inplace=False)
-
-    def forward(self, input):
-        """
-        Forward pass to evaluate network for input values
-        :param input: tensor assumed to be of size (batch_size, n_inputs)
-        :return: output tensor
-        """
-        x = input
-        for l in self.linear_layers[:-1]:
-            x = l(x)
-            x = self.act(x)
-
-        output_layer = self.linear_layers[-1]
-        return output_layer(x)
-
-    def get_num_parameters(self):
-        return sum(p.numel() for p in self.parameters())
-
-    def save(self, path: str):
-        """
-        Save model state
-        :param path: Path to save model state
-        :return: None
-        """
-        torch.save({
-            'model_state_dict': self.state_dict(),
-        }, path)
-
-    def load(self, path: str):
-        """
-        Load model state from file
-        :param path: Path to saved model state
-        :return: None
-        """
-        checkpoint = torch.load(path, map_location=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
-        self.load_state_dict(checkpoint['model_state_dict'])
-
-
 space = [
         Integer(2, 5, name="hidden_layers"),
-        Integer(2, 5, name="hidden_layer_width"),
+        Integer(40, 60, name="hidden_layer_width"),
         Real(10**-5, 10**0, "log-uniform", name='lr'),
         Real(10**-3, 10**0, "log-uniform", name='l2'),
         Categorical([8, 10, 12], name="batch_size")
@@ -128,10 +34,10 @@ def objective(**params):
     inputs = ['CHK', 'PWH', 'PDC', 'TWH', 'FGAS', 'FOIL']
     outputs = ['QTOT']
 
-    print("*************************")
-    print("Training with params:")
-    print(params)
-    print("*************************")
+    print("*" * 105)
+    print(("*" * 41), "Training with params:", ("*" * 41))
+    print("*", params, "*")
+    print("*" * 105)
 
     net = Net(
         inputs=len(inputs),
@@ -178,7 +84,7 @@ def objective(**params):
             # Update parameters using gradient
             optimizer.step()
 
-        # Evaluate model on validation data
+        # Evaluate notebooks on validation data
         mse_val = 0
         for inputs, labels in val_loader:
             mse_val += torch.sum(torch.pow(labels - net(inputs), 2)).item()
@@ -188,13 +94,13 @@ def objective(**params):
             best_mse = mse_val
             torch.save(
                 (net.state_dict(), optimizer.state_dict()),
-                "/home/knut/Documents/TTK28-Courseware-master/results/best"
+                os.path.join(get_results_path(), "best2")
             )
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("Current best params")
-            print(params)
-            print("New MSE: ", mse_val)
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print("~" * 105)
+            print(("~" * 42), "Current best params", ("~" * 42))
+            print("~", params, "~")
+            print(("~" * 44), "New MSE: {:.4f}".format(mse_val), ("~" * 42))
+            print("~" * 105)
 
     print("Finished Training")
     return mse_val
@@ -213,10 +119,10 @@ def test_best_model(result):
 
     device = "cpu"
     best_trained_model.to(device)
-    model_state, optimizer_state = torch.load("/home/knut/Documents/TTK28-Courseware-master/results/best")
+    model_state, optimizer_state = torch.load(os.path.join(get_results_path(), "best2"))
     best_trained_model.load_state_dict(model_state)
 
-    # Import traing, validation and test data
+    # Import training, validation and test data
     train_loader, x_val, y_val, val_loader, x_test, y_test = prepare_data(
         INPUT_COLS=inputs,
         OUTPUT_COLS=outputs,
@@ -258,7 +164,10 @@ def main():
     # Random seed
     torch.manual_seed(12345)
 
-    res_gp = gp_minimize(objective, space, n_calls=10, random_state=1, acq_func="EI", verbose=True)
+    global best_mse
+    best_mse = 100
+
+    res_gp = gp_minimize(objective, space, n_calls=10, n_initial_points=5, random_state=1, acq_func="EI", verbose=True)
 
     print(res_gp.x)
 

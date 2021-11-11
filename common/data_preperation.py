@@ -1,7 +1,10 @@
 import pandas as pd
+
 import torch
 from torch.utils.data import DataLoader
+
 from common.constants import random_seed
+from pathmanager import get_dataset_path
 
 
 def split_data():
@@ -11,7 +14,8 @@ def split_data():
     :return:
     """
     # Read the dataset from csv file
-    df = pd.read_csv('/home/knut/Documents/TTK28-Courseware-master/dataset/well_data.csv', index_col=0)
+    path = get_dataset_path("well_data.csv")
+    df = pd.read_csv(path, index_col=0)
 
     # Test set (this is the period for which we must estimate QTOT)
     test_set = df.iloc[2000:2500]
@@ -30,13 +34,16 @@ def split_data():
     assert(n_points == len(df))
 
     # Write training set to csv
-    train_set.to_csv('../dataset/training_set.csv')
+    path = get_dataset_path("training_set.csv")
+    train_set.to_csv(path)
 
     # Write validation set to csv
-    val_set.to_csv('../dataset/validation_set.csv')
+    path = get_dataset_path("validation_set.csv")
+    val_set.to_csv(path)
 
     # Write test set to csv
-    test_set.to_csv('../dataset/test_set.csv')
+    path = get_dataset_path("test_set.csv")
+    test_set.to_csv(path)
 
 
 def prepare_data(
@@ -55,9 +62,12 @@ def prepare_data(
     # INPUT_COLS = ['CHK', 'PWH', 'PDC', 'TWH', 'FGAS', 'FOIL']
     # OUTPUT_COLS = ['QTOT']
 
-    train_set = pd.read_csv('/home/knut/Documents/TTK28-Courseware-master/dataset/training_set.csv', index_col=0)
-    val_set = pd.read_csv('/home/knut/Documents/TTK28-Courseware-master/dataset/validation_set.csv', index_col=0)
-    test_set = pd.read_csv('/home/knut/Documents/TTK28-Courseware-master/dataset/test_set.csv', index_col=0)
+    path = get_dataset_path("training_set.csv")
+    train_set = pd.read_csv(path, index_col=0)
+    path = get_dataset_path("validation_set.csv")
+    val_set = pd.read_csv(path, index_col=0)
+    path = get_dataset_path("test_set.csv")
+    test_set = pd.read_csv(path, index_col=0)
 
     # Get input and output tensors and convert them to torch tensors
     x_train = torch.from_numpy(train_set[INPUT_COLS].values).to(torch.float)
