@@ -16,9 +16,8 @@ class GPSampler(BaseSampler):
         self.told_trials = set()
 
     def sample_relative(self, trial, search_space):
-        """
+
         # type:(FrozenTrial, Dict[str, distributions.BaseDistribution]) -> Dict[str, float]
-        """
 
         if len(search_space) == 0:
             return {}

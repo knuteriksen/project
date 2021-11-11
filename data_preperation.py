@@ -89,3 +89,6 @@ def prepare_data(
     y_test = torch.from_numpy(test_set[OUTPUT_COLS].values).to(torch.float)
 
     return train_loader, x_val, y_val, val_loader, x_test, y_test
+
+
+split_data()

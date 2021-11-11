@@ -3,7 +3,6 @@ import torch.utils.data
 
 from ray import tune
 from ray.tune.suggest.bayesopt import BayesOptSearch
-
 from common.constants import random_seed
 
 from rayTune_common.training_loop import train

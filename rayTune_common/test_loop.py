@@ -4,7 +4,7 @@ import torch
 
 from model.model import Net
 
-from common.data_preperation import prepare_data
+from data_preperation import prepare_data
 
 
 def test_best_model(best_trial):

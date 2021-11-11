@@ -19,7 +19,7 @@ def optimize():
         skopt.space.Integer(2, 5, name="hidden_layers"),
         skopt.space.Integer(40, 60, name="hidden_layer_width"),
         skopt.space.Real(10 ** -5, 10 ** 0, "log-uniform", name='lr'),
-        skopt.space.Real(10 ** -3, 10 ** 0, "log-uniform", name='l2'),
+        skopt.space.Real(10 ** -3, 10 ** 0, "uniform", name='l2'),
         skopt.space.Categorical([8, 10, 12], name="batch_size")
     ]
 
@@ -57,4 +57,4 @@ def optimize():
 
 
 if __name__ == "__main__":
-    main()
+    optimize()

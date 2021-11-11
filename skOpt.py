@@ -7,7 +7,7 @@ from skopt.utils import use_named_args
 import torch
 import torch.utils.data
 
-from common.data_preperation import prepare_data
+from data_preperation import prepare_data
 from pathmanager import get_results_path
 
 from model.model import Net

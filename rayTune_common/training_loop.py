@@ -6,7 +6,7 @@ from ray import tune
 
 from model.model import Net
 
-from common.data_preperation import prepare_data
+from data_preperation import prepare_data
 
 
 def train(config, checkpoint_dir=None):
