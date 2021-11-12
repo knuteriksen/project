@@ -67,7 +67,7 @@ def prepare_data(
     path = get_dataset_path("validation_set.csv")
     val_set = pd.read_csv(path, index_col=0)
     path = get_dataset_path("test_set.csv")
-    test_set = pd.read_csv(path, index_col=0)
+    test_set = pd.read_csv("/home/knut/Documents/project/dataset/test_set.csv", index_col=0)
 
     # Get input and output tensors and convert them to torch tensors
     x_train = torch.from_numpy(train_set[INPUT_COLS].values).to(torch.float)

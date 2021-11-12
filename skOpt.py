@@ -3,6 +3,7 @@ import os
 from skopt import gp_minimize
 from skopt.space import Real, Integer, Categorical
 from skopt.utils import use_named_args
+from skopt.plots import plot_convergence
 
 import torch
 import torch.utils.data
@@ -172,6 +173,8 @@ def main():
     print(res_gp.x)
 
     test_best_model(res_gp.x)
+
+    plot_convergence(res_gp)
 
 
 if __name__ == "__main__":

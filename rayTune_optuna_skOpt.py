@@ -1,42 +1,44 @@
 import torch
-import torch.utils.data
+
+from optuna.integration import SkoptSampler
 
 from ray import tune
-from ray.tune.suggest.skopt import SkOptSearch
-import skopt
+from ray.tune.suggest.optuna import OptunaSearch
+from ray.tune.suggest import ConcurrencyLimiter
 
 from common.constants import random_seed
-
 from rayTune_common.training_loop import train
 from rayTune_common.test_loop import test_best_model
 
 
-def optimize(space: []):
+def optimize(config: {}):
     # Random seed
     torch.manual_seed(random_seed)
 
-    optimizer = skopt.Optimizer(
-        space,
-        base_estimator="GP",
-        n_initial_points=5,
-        acq_func="EI"
+    optimizer = SkoptSampler(
+        skopt_kwargs={
+            "base_estimator": "GP",
+            "n_initial_points": 5,
+            "acq_func": "EI"
+        }
     )
 
-    skopt_search = SkOptSearch(
-        optimizer=optimizer,
-        space=["hidden_layers", "hidden_layer_width", "lr", "l2", "batch_size"],
+    algo = OptunaSearch(
+        sampler=optimizer,
         metric="mean_square_error",
         mode="min",
-
     )
+
+    algo = ConcurrencyLimiter(algo, max_concurrent=1)
 
     result = tune.run(
         tune.with_parameters(train),
-        name="Test SkOpt",
+        name="Test Optuna SkOpt",
         metric="mean_square_error",
         mode="min",
-        search_alg=skopt_search,
+        search_alg=algo,
         num_samples=10,
+        config=config,
         resources_per_trial={"cpu": 1, "gpu": 0}
     )
 
@@ -50,11 +52,11 @@ def optimize(space: []):
 
 if __name__ == "__main__":
     optimize(
-        space=[
-            skopt.space.Integer(2, 5, name="hidden_layers"),
-            skopt.space.Integer(40, 60, name="hidden_layer_width"),
-            skopt.space.Real(10 ** -5, 10 ** 0, "log-uniform", name='lr'),
-            skopt.space.Real(10 ** -3, 10 ** 0, "uniform", name='l2'),
-            skopt.space.Categorical([8, 10, 12], name="batch_size")
-        ]
+        config={
+            "l2": tune.uniform(1e-3, 1),
+            "lr": tune.loguniform(1e-5, 1),
+            "batch_size": tune.uniform(8, 12),
+            "hidden_layers": tune.quniform(2, 5, 1),
+            "hidden_layer_width": tune.quniform(40, 60, 1)
+        }
     )

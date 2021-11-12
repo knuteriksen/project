@@ -13,8 +13,8 @@ def test_best_model(best_trial):
 
     best_trained_model = Net(
         len(inputs),
-        best_trial.config["hidden_layers"],
-        best_trial.config["hidden_layer_width"],
+        int(best_trial.config["hidden_layers"]),
+        int(best_trial.config["hidden_layer_width"]),
         len(outputs)
     )
 

@@ -13,16 +13,6 @@ def optimize(config: {}):
     # Random seed
     torch.manual_seed(random_seed)
 
-    """
-    config = {
-        "l2": tune.uniform(1e-3, 1),
-        "lr": tune.loguniform(1e-5, 1),
-        "batch_size": tune.uniform(8, 12),
-        "hidden_layers": tune.uniform(2, 5),
-        "hidden_layer_width": tune.uniform(40, 60)
-    }
-    """
-
     bayesopt = BayesOptSearch(
         random_search_steps=5,
         utility_kwargs={
@@ -57,7 +47,7 @@ if __name__ == "__main__":
             "l2": tune.uniform(1e-3, 1),
             "lr": tune.loguniform(1e-5, 1),
             "batch_size": tune.uniform(8, 12),
-            "hidden_layers": tune.uniform(2, 5),
-            "hidden_layer_width": tune.uniform(40, 60)
+            "hidden_layers": int(tune.uniform(2, 5)),
+            "hidden_layer_width": int(tune.uniform(40, 60))
         }
     )

@@ -20,8 +20,8 @@ def train(config, checkpoint_dir=None):
     outputs = ['QTOT']
     net = Net(
         len(inputs),
-        config["hidden_layers"],
-        config["hidden_layer_width"],
+        int(config["hidden_layers"]),
+        int(config["hidden_layer_width"]),
         len(outputs)
     )
 

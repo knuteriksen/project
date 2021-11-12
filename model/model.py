@@ -9,7 +9,7 @@ class Net(torch.nn.Module):
     This gives us full control over the construction and clarifies our intentions.
     """
 
-    def __init__(self, inputs: int, hidden_layers: float, hidden_layer_width: float, outputs: int):
+    def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int):
         """
 
         :param inputs:
@@ -21,10 +21,7 @@ class Net(torch.nn.Module):
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-        _hl = int(hidden_layers)
-        _hlw = int(hidden_layer_width)
-
-        layers = [inputs] + [_hlw]*_hl + [outputs]
+        layers = [inputs] + [hidden_layer_width]*hidden_layers + [outputs]
 
         assert len(layers) >= 2, "At least two layers are required (incl. input and output layer)"
         self.layers = layers
