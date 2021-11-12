@@ -6,3 +6,9 @@ dependencies:
   - matplotlib
   - pytorch
   - jupyter
+  - pip:
+    - optuna
+    - ray
+    - ray[tune]
+    - scikit-optimize
+    - bayesian-optimization

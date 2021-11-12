@@ -12,7 +12,6 @@ from rayTune_common.test_loop import test_best_model
 
 
 def optimize(space: []):
-    # Random seed
     torch.manual_seed(random_seed)
 
     optimizer = skopt.Optimizer(

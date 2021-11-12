@@ -10,7 +10,6 @@ from rayTune_common.test_loop import test_best_model
 
 
 def optimize(config: {}):
-    # Random seed
     torch.manual_seed(random_seed)
 
     bayesopt = BayesOptSearch(
