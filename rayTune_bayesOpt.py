@@ -3,6 +3,8 @@ import torch.utils.data
 
 from ray import tune
 from ray.tune.suggest.bayesopt import BayesOptSearch
+from ray.tune.suggest import ConcurrencyLimiter
+
 from common.constants import random_seed
 
 from rayTune_common.training_loop import train
@@ -21,15 +23,18 @@ def optimize(config: {}):
         }
     )
 
+    algo = ConcurrencyLimiter(bayesopt, max_concurrent=1)
+
     result = tune.run(
         tune.with_parameters(train),
         name="Test Bayes Opt",
         metric="mean_square_error",
         mode="min",
-        search_alg=bayesopt,
+        search_alg=algo,
         num_samples=10,
         config=config,
-        resources_per_trial={"cpu": 1, "gpu": 0}
+        resources_per_trial={"cpu": 1, "gpu": 0},
+        verbose=3
     )
 
     best_trial = result.get_best_trial("mean_square_error", "min", "last")
@@ -38,15 +43,3 @@ def optimize(config: {}):
         best_trial.last_result["mean_square_error"]))
 
     test_best_model(best_trial=best_trial)
-
-
-if __name__ == "__main__":
-    optimize(
-        config={
-            "l2": tune.uniform(1e-3, 1),
-            "lr": tune.loguniform(1e-5, 1),
-            "batch_size": tune.uniform(8, 12),
-            "hidden_layers": int(tune.uniform(2, 5)),
-            "hidden_layer_width": int(tune.uniform(40, 60))
-        }
-    )

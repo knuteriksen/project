@@ -3,6 +3,8 @@ import torch.utils.data
 
 from ray import tune
 from ray.tune.suggest.skopt import SkOptSearch
+from ray.tune.suggest import ConcurrencyLimiter
+
 import skopt
 
 from common.constants import random_seed
@@ -29,14 +31,17 @@ def optimize(space: []):
 
     )
 
+    algo = ConcurrencyLimiter(skopt_search, max_concurrent=1)
+
     result = tune.run(
         tune.with_parameters(train),
         name="Test SkOpt",
         metric="mean_square_error",
         mode="min",
-        search_alg=skopt_search,
+        search_alg=algo,
         num_samples=10,
-        resources_per_trial={"cpu": 1, "gpu": 0}
+        resources_per_trial={"cpu": 1, "gpu": 0},
+        verbose=3
     )
 
     best_trial = result.get_best_trial("mean_square_error", "min", "last")
@@ -45,15 +50,3 @@ def optimize(space: []):
         best_trial.last_result["mean_square_error"]))
 
     test_best_model(best_trial=best_trial)
-
-
-if __name__ == "__main__":
-    optimize(
-        space=[
-            skopt.space.Integer(2, 5, name="hidden_layers"),
-            skopt.space.Integer(40, 60, name="hidden_layer_width"),
-            skopt.space.Real(10 ** -5, 10 ** 0, "log-uniform", name='lr'),
-            skopt.space.Real(10 ** -3, 10 ** 0, "uniform", name='l2'),
-            skopt.space.Categorical([8, 10, 12], name="batch_size")
-        ]
-    )

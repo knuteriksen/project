@@ -38,7 +38,8 @@ def optimize(config: {}):
         search_alg=algo,
         num_samples=10,
         config=config,
-        resources_per_trial={"cpu": 1, "gpu": 0}
+        resources_per_trial={"cpu": 1, "gpu": 0},
+        verbose=3
     )
 
     best_trial = result.get_best_trial("mean_square_error", "min", "last")
@@ -47,15 +48,3 @@ def optimize(config: {}):
         best_trial.last_result["mean_square_error"]))
 
     test_best_model(best_trial=best_trial)
-
-
-if __name__ == "__main__":
-    optimize(
-        config={
-            "l2": tune.uniform(1e-3, 1),
-            "lr": tune.loguniform(1e-5, 1),
-            "batch_size": tune.uniform(8, 12),
-            "hidden_layers": tune.quniform(2, 5, 1),
-            "hidden_layer_width": tune.quniform(40, 60, 1)
-        }
-    )

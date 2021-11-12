@@ -74,7 +74,6 @@ def train(config, checkpoint_dir=None):
         for inputs, labels in val_loader:
             mse_val += torch.sum(torch.pow(labels - net(inputs), 2)).item()
         mse_val /= len(val_loader.dataset)
-        print(f'Epoch: {epoch + 1}: Val MSE: {mse_val}')
 
         # Here we save a checkpoint. It is automatically registered with
         # Ray Tune and will potentially be passed as the `checkpoint_dir`
