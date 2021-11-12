@@ -9,7 +9,7 @@ from rayTune_common.test_loop import test_best_model
 from rayTune_common.training_loop import train
 
 
-def optimize(config: {}):
+def optimize(config: {}, iterations: int):
     torch.manual_seed(random_seed)
 
     optimizer = SkoptSampler(
@@ -34,7 +34,7 @@ def optimize(config: {}):
         metric="mean_square_error",
         mode="min",
         search_alg=algo,
-        num_samples=10,
+        num_samples=iterations,
         config=config,
         resources_per_trial={"cpu": 1, "gpu": 0},
         verbose=3

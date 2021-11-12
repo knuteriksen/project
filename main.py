@@ -11,20 +11,30 @@ from rayTune_skOpt import optimize as run_skopt
 
 def main(argv):
     try:
-        arguments, values = getopt.getopt(argv[1:], "sbo")
+        arguments, values = getopt.getopt(argv[1:], "s:b:o:")
     except getopt.GetoptError:
-        sys.exit(2)
-
-    if len(arguments) != 1:
-        print("Please select an optimizer")
+        print("GetOptError")
+        print("Please select an optimizer and specify iterations")
         print("-s for Scikit-Optimize")
         print("-b for Bayesian Optimization")
         print("-o for Optuna")
+        print("Example: python3 main.py -b 100")
+        sys.exit(2)
+
+    if len(arguments) != 1:
+        print("Invalid specification")
+        print("Please select an optimizer and specify iterations")
+        print("-s for Scikit-Optimize")
+        print("-b for Bayesian Optimization")
+        print("-o for Optuna")
+        print("Example: python3 main.py -b 100")
         sys.exit(1)
 
     for current_argument, current_value in arguments:
+        its = int(current_value)
+
         if current_argument in "-s":
-            print("Running Scikit Optimize")
+            print(f"Running Scikit Optimize with {its} iterations")
             run_skopt(
                 space=[
                     skopt.space.Integer(2, 5, name="hidden_layers"),
@@ -32,10 +42,11 @@ def main(argv):
                     skopt.space.Real(10 ** -5, 10 ** 0, "log-uniform", name='lr'),
                     skopt.space.Real(10 ** -3, 10 ** 0, "uniform", name='l2'),
                     skopt.space.Categorical([8, 10, 12], name="batch_size")
-                ]
+                ],
+                iterations=its
             )
         elif current_argument in "-b":
-            print("Running Bayesian Optimization")
+            print(f"Running Bayesian Optimization with {its} iterations")
             run_bayesopt(
                 config={
                     "l2": tune.uniform(1e-3, 1),
@@ -43,10 +54,11 @@ def main(argv):
                     "batch_size": tune.uniform(8, 12),
                     "hidden_layers": tune.quniform(2, 5, 1),
                     "hidden_layer_width": tune.quniform(40, 60, 1)
-                }
+                },
+                iterations=its
             )
         elif current_argument in "-o":
-            print("Running Optuna")
+            print(f"Running Optuna with {its} iterations")
             run_optuna(
                 config={
                     "l2": tune.uniform(1e-3, 1),
@@ -54,8 +66,16 @@ def main(argv):
                     "batch_size": tune.uniform(8, 12),
                     "hidden_layers": tune.quniform(2, 5, 1),
                     "hidden_layer_width": tune.quniform(40, 60, 1)
-                }
+                },
+                iterations=its
             )
+        else:
+            print("Invalid optimizer")
+            print("Please select an optimizer")
+            print("-s for Scikit-Optimize")
+            print("-b for Bayesian Optimization")
+            print("-o for Optuna")
+            print("Example: python3 main.py -b 100")
 
 
 if __name__ == "__main__":
