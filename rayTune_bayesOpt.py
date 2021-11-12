@@ -1,14 +1,12 @@
 import torch
 import torch.utils.data
-
 from ray import tune
-from ray.tune.suggest.bayesopt import BayesOptSearch
 from ray.tune.suggest import ConcurrencyLimiter
+from ray.tune.suggest.bayesopt import BayesOptSearch
 
-from common.constants import random_seed
-
-from rayTune_common.training_loop import train
+from rayTune_common.constants import random_seed
 from rayTune_common.test_loop import test_best_model
+from rayTune_common.training_loop import train
 
 
 def optimize(config: {}):

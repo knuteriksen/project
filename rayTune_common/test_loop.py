@@ -2,20 +2,23 @@ import os
 
 import torch
 
-from model.model import Net
-
 from data_preperation import prepare_data
+from model.model import Net
+from rayTune_common.constants import ins, outs
 
 
 def test_best_model(best_trial):
-    inputs = ['CHK', 'PWH', 'PDC', 'TWH', 'FGAS', 'FOIL']
-    outputs = ['QTOT']
+    """
+
+    :param best_trial:
+    :return:
+    """
 
     best_trained_model = Net(
-        len(inputs),
+        len(ins),
         int(best_trial.config["hidden_layers"]),
         int(best_trial.config["hidden_layer_width"]),
-        len(outputs)
+        len(outs)
     )
 
     device = "cpu"
@@ -29,8 +32,8 @@ def test_best_model(best_trial):
 
     # Import traing, validation and test data
     train_loader, x_val, y_val, val_loader, x_test, y_test = prepare_data(
-        INPUT_COLS=inputs,
-        OUTPUT_COLS=outputs,
+        INPUT_COLS=ins,
+        OUTPUT_COLS=outs,
         train_batch_size=int(best_trial.config["batch_size"])
     )
 

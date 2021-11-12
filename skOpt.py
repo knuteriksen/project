@@ -1,28 +1,25 @@
 import os
 
-from skopt import gp_minimize
-from skopt.space import Real, Integer, Categorical
-from skopt.utils import use_named_args
-from skopt.plots import plot_convergence
-
 import torch
 import torch.utils.data
+from skopt import gp_minimize
+from skopt.plots import plot_convergence
+from skopt.space import Real, Integer, Categorical
+from skopt.utils import use_named_args
 
 from data_preperation import prepare_data
-from pathmanager import get_results_path
-
 from model.model import Net
-
+from pathmanager import get_results_path
 
 best_mse = 100
 
 space = [
-        Integer(2, 5, name="hidden_layers"),
-        Integer(40, 60, name="hidden_layer_width"),
-        Real(10**-5, 10**0, "log-uniform", name='lr'),
-        Real(10**-3, 10**0, "log-uniform", name='l2'),
-        Categorical([8, 10, 12], name="batch_size")
-    ]
+    Integer(2, 5, name="hidden_layers"),
+    Integer(40, 60, name="hidden_layer_width"),
+    Real(10 ** -5, 10 ** 0, "log-uniform", name='lr'),
+    Real(10 ** -3, 10 ** 0, "log-uniform", name='l2'),
+    Categorical([8, 10, 12], name="batch_size")
+]
 
 
 @use_named_args(space)

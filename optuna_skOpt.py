@@ -1,14 +1,11 @@
 import optuna
 import torch
-import numpy as np
-
 from optuna.integration import SkoptSampler
 from optuna.trial import Trial
 
-from common.constants import random_seed
 from data_preperation import prepare_data
-
 from model.model import Net
+from rayTune_common.constants import random_seed
 
 
 def objective(trial: Trial):
@@ -108,8 +105,6 @@ def optimize():
     print("  Params: ")
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
-
-
 
 
 if __name__ == "__main__":

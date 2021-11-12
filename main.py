@@ -1,12 +1,12 @@
+import getopt
+import sys
+
 import skopt
 from ray import tune
 
-from rayTune_skOpt import optimize as run_skopt
 from rayTune_bayesOpt import optimize as run_bayesopt
 from rayTune_optuna_skOpt import optimize as run_optuna
-
-import sys
-import getopt
+from rayTune_skOpt import optimize as run_skopt
 
 
 def main(argv):

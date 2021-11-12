@@ -1,27 +1,21 @@
-import torch
 import numpy as np
+import torch
 
 
 class Net(torch.nn.Module):
-    """
-    PyTorch offers several ways to construct neural networks.
-    Here we choose to implement the network as a Module class.
-    This gives us full control over the construction and clarifies our intentions.
-    """
-
     def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int):
         """
 
-        :param inputs:
-        :param hidden_layers:
-        :param hidden_layer_width:
-        :param outputs:
+        :param inputs: Number of inputs
+        :param hidden_layers: Number of hidden layers
+        :param hidden_layer_width: Size of hidden layer
+        :param outputs: Number of outputs
         """
         super().__init__()
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-        layers = [inputs] + [hidden_layer_width]*hidden_layers + [outputs]
+        layers = [inputs] + [hidden_layer_width] * hidden_layers + [outputs]
 
         assert len(layers) >= 2, "At least two layers are required (incl. input and output layer)"
         self.layers = layers
@@ -50,6 +44,7 @@ class Net(torch.nn.Module):
 
     def forward(self, input):
         """
+
         Forward pass to evaluate network for input values
         :param input: tensor assumed to be of size (batch_size, n_inputs)
         :return: output tensor

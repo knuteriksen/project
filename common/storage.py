@@ -1,6 +1,6 @@
+import csv
 import os
 from datetime import datetime
-import csv
 
 
 def init_new_results_dir(num_hp: int, search_method: str):

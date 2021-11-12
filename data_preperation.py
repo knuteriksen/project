@@ -1,10 +1,9 @@
 import pandas as pd
-
 import torch
 from torch.utils.data import DataLoader
 
-from common.constants import random_seed
 from pathmanager import get_dataset_path
+from rayTune_common.constants import random_seed
 
 
 def split_data():
@@ -31,7 +30,7 @@ def split_data():
 
     # Check that the numbers add up
     n_points = len(train_set) + len(val_set) + len(test_set)
-    assert(n_points == len(df))
+    assert (n_points == len(df))
 
     # Write training set to csv
     path = get_dataset_path("training_set.csv")

@@ -1,12 +1,11 @@
 import os
 
 import torch
-
 from ray import tune
 
-from model.model import Net
-
 from data_preperation import prepare_data
+from model.model import Net
+from rayTune_common.constants import ins, outs
 
 
 def train(config, checkpoint_dir=None):
@@ -16,13 +15,12 @@ def train(config, checkpoint_dir=None):
     :param checkpoint_dir:
     :return:
     """
-    inputs = ['CHK', 'PWH', 'PDC', 'TWH', 'FGAS', 'FOIL']
-    outputs = ['QTOT']
+
     net = Net(
-        len(inputs),
+        len(ins),
         int(config["hidden_layers"]),
         int(config["hidden_layer_width"]),
-        len(outputs)
+        len(outs)
     )
 
     # Define loss and optimizer
@@ -39,8 +37,8 @@ def train(config, checkpoint_dir=None):
 
     # Import traing, validation and test data
     train_loader, x_valid, y_valid, val_loader, x_test, y_test = prepare_data(
-        INPUT_COLS=inputs,
-        OUTPUT_COLS=outputs,
+        INPUT_COLS=ins,
+        OUTPUT_COLS=outs,
         train_batch_size=int(config["batch_size"])
     )
 
