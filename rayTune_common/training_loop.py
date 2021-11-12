@@ -3,6 +3,7 @@ import os
 import torch
 from ray import tune
 
+from common.storage import quicktest
 from data_preperation import prepare_data
 from model.model import Net
 from rayTune_common.constants import ins, outs
@@ -35,7 +36,7 @@ def train(config, checkpoint_dir=None):
         net.load_state_dict(model_state)
         optimizer.load_state_dict(optimizer_state)
 
-    # Import traing, validation and test data
+    # Import training, validation and test data
     train_loader, x_valid, y_valid, val_loader, x_test, y_test = prepare_data(
         INPUT_COLS=ins,
         OUTPUT_COLS=outs,
@@ -67,7 +68,7 @@ def train(config, checkpoint_dir=None):
             # Update parameters using gradient
             optimizer.step()
 
-        # Evaluate notebooks on validation data
+        # Evaluate model on validation data
         mse_val = 0
         for inputs, labels in val_loader:
             mse_val += torch.sum(torch.pow(labels - net(inputs), 2)).item()
@@ -81,6 +82,8 @@ def train(config, checkpoint_dir=None):
             torch.save(
                 (net.state_dict(), optimizer.state_dict()), path)
 
-        tune.report(mean_square_error=mse_val)
+            tune.report(mean_square_error=mse_val)
+
+        quicktest(mse_val)
 
     print("Finished Training")

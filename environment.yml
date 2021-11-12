@@ -7,8 +7,9 @@ dependencies:
   - pytorch
   - jupyter
   - pip:
-    - optuna
-    - ray
-    - ray[tune]
-    - scikit-optimize
-    - bayesian-optimization
+      - optuna
+      - ray
+      - ray[tune]
+      - scikit-optimize
+      - bayesian-optimization
+      - tensorboard

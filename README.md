@@ -13,4 +13,9 @@
 
 With Scikit Optimize: `python3 main.py -s 100`  
 With Bayesian Optimization: `python3 main.py -b 100`  
-With Optuna and Scikit Optimize: `python3 main.py -o 100`
+With Optuna and Scikit Optimize: `python3 main.py -o 100`  
+With Random serach: `python3 main.py -r 100`
+
+## Tensorbard
+
+`tensorboard --logdir=~/ray_results/Test\ SkOpt/`

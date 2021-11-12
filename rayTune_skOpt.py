@@ -1,3 +1,4 @@
+import numpy as np
 import skopt
 import torch
 import torch.utils.data
@@ -11,13 +12,15 @@ from rayTune_common.training_loop import train
 
 
 def optimize(space: [], iterations: int):
+    np.random.seed(random_seed)
     torch.manual_seed(random_seed)
 
     optimizer = skopt.Optimizer(
         space,
         base_estimator="GP",
         n_initial_points=5,
-        acq_func="EI"
+        acq_func="EI",
+        acq_func_kwargs={"xi": 0.05}
     )
 
     skopt_search = SkOptSearch(

@@ -159,3 +159,11 @@ def append_mse_to_easy_plot(mse: float, parent: str):
     with open(fpath, 'a') as f:
         writer = csv.writer(f)
         writer.writerow(row)
+
+
+def quicktest(mse):
+    fpath = os.path.join("/home/knut/Documents/project/results", "easy_plot.csv")
+    row = [mse]
+    with open(fpath, 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(row)
