@@ -11,6 +11,6 @@
 
 ## Runnnig optimization
 
-With Scikit Optimize: `python3 main.py -s`  
-With Bayesian Optimization: `python3 main.py -b`  
-With Optuna and Scikit Optimize: `python3 main.py -o`
+With Scikit Optimize: `python3 main.py -s 100`  
+With Bayesian Optimization: `python3 main.py -b 100`  
+With Optuna and Scikit Optimize: `python3 main.py -o 100`
