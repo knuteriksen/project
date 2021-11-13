@@ -27,15 +27,14 @@ def optimize(space: [], iterations: int):
         optimizer=optimizer,
         space=["hidden_layers", "hidden_layer_width", "lr", "l2", "batch_size"],
         metric="mean_square_error",
-        mode="min",
-
+        mode="min"
     )
 
     algo = ConcurrencyLimiter(skopt_search, max_concurrent=1)
 
     result = tune.run(
         tune.with_parameters(train),
-        name="Test SkOpt",
+        name="skopt",
         metric="mean_square_error",
         mode="min",
         search_alg=algo,

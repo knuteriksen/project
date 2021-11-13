@@ -55,8 +55,6 @@ def objective(**params):
         train_batch_size=int(params.get("batch_size"))
     )
 
-    mse_val = 0
-
     # Train Network
     _n_epochs = 100
     for epoch in range(_n_epochs):
@@ -101,7 +99,7 @@ def objective(**params):
             print("~" * 105)
 
     print("Finished Training")
-    return mse_val
+    return best_mse
 
 
 def test_best_model(result):
@@ -165,7 +163,7 @@ def main():
     global best_mse
     best_mse = 100
 
-    res_gp = gp_minimize(objective, space, n_calls=10, n_initial_points=5, random_state=1, acq_func="EI", verbose=True)
+    res_gp = gp_minimize(objective, space, n_calls=15, n_initial_points=5, random_state=1, acq_func="EI", verbose=True)
 
     print(res_gp.x)
 

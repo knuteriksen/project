@@ -37,6 +37,8 @@ def test_best_model(best_trial):
         train_batch_size=int(best_trial.config["batch_size"])
     )
 
+    best_trained_model.eval()
+
     # Predict on validation data
     pred_val = best_trained_model(x_val)
 

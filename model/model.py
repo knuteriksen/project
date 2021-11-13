@@ -3,7 +3,7 @@ import torch
 
 
 class Net(torch.nn.Module):
-    def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int):
+    def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int, dropout_value=0.0):
         """
 
         :param inputs: Number of inputs
@@ -35,6 +35,9 @@ class Net(torch.nn.Module):
 
             # Add to list
             linear_layers.append(layer)
+
+            if dropout_value:
+                linear_layers.append(torch.nn.Dropout(dropout_value))
 
         # Modules/layers must be registered to enable saving of notebooks
         self.linear_layers = torch.nn.ModuleList(linear_layers)

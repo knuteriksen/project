@@ -11,15 +11,16 @@ from rayTune_common.training_loop import train
 def optimize(config: {}, iterations: int):
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
-    
+
     result = tune.run(
         tune.with_parameters(train),
         config=config,
-        name="Test Random",
+        name="random",
         metric="mean_square_error",
         mode="min",
         num_samples=iterations,
-        resources_per_trial={"cpu": 1, "gpu": 0},
+        resources_per_trial={"cpu": 8, "gpu": 0},
+        max_concurrent_trials=8,
         verbose=3
     )
 

@@ -13,3 +13,4 @@ dependencies:
       - scikit-optimize
       - bayesian-optimization
       - tensorboard
+      - seaborn

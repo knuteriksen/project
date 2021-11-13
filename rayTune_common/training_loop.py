@@ -1,12 +1,12 @@
 import os
 
+import numpy as np
 import torch
 from ray import tune
 
-from common.storage import quicktest
 from data_preperation import prepare_data
 from model.model import Net
-from rayTune_common.constants import ins, outs
+from rayTune_common.constants import ins, outs, random_seed
 
 
 def train(config, checkpoint_dir=None):
@@ -16,12 +16,19 @@ def train(config, checkpoint_dir=None):
     :param checkpoint_dir:
     :return:
     """
+    np.random.seed(random_seed)
+    torch.manual_seed(random_seed)
+
+    dropout_value = 0.0
+    if config["dropout"]:
+        dropout_value = 0.3
 
     net = Net(
         len(ins),
         int(config["hidden_layers"]),
         int(config["hidden_layer_width"]),
-        len(outs)
+        len(outs),
+        dropout_value=dropout_value
     )
 
     # Define loss and optimizer
@@ -44,8 +51,9 @@ def train(config, checkpoint_dir=None):
     )
 
     # Train Network
-    _n_epochs = 100
-    for epoch in range(_n_epochs):
+    best_mse = np.inf
+    for epoch in range(int(config["epochs"])):
+        net.train()
         for inputs, labels in train_loader:
             # Zero the parameter gradients (from last iteration)
             optimizer.zero_grad()
@@ -69,21 +77,20 @@ def train(config, checkpoint_dir=None):
             optimizer.step()
 
         # Evaluate model on validation data
+        net.eval()
         mse_val = 0
         for inputs, labels in val_loader:
             mse_val += torch.sum(torch.pow(labels - net(inputs), 2)).item()
         mse_val /= len(val_loader.dataset)
 
-        # Here we save a checkpoint. It is automatically registered with
-        # Ray Tune and will potentially be passed as the `checkpoint_dir`
-        # parameter in future iterations.
-        with tune.checkpoint_dir(step=epoch) as checkpoint_dir:
-            path = os.path.join(checkpoint_dir, "checkpoint")
-            torch.save(
-                (net.state_dict(), optimizer.state_dict()), path)
-
+        # Only checkpoint if current mse is less than previously best
+        if mse_val < best_mse:
+            best_mse = mse_val
+            # Here we save a checkpoint. It is automatically registered with
+            # Ray Tune and will potentially be passed as the `checkpoint_dir`
+            # parameter in future iterations.
+            with tune.checkpoint_dir(step=epoch) as checkpoint_dir:
+                path = os.path.join(checkpoint_dir, "checkpoint")
+                torch.save(
+                    (net.state_dict(), optimizer.state_dict()), path)
             tune.report(mean_square_error=mse_val)
-
-        quicktest(mse_val)
-
-    print("Finished Training")

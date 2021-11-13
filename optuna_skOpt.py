@@ -92,7 +92,7 @@ def optimize():
     )
 
     study = optuna.create_study(sampler=optimizer, direction="minimize")
-    study.optimize(objective, n_trials=10, show_progress_bar=True)
+    study.optimize(objective, n_trials=15, show_progress_bar=True)
 
     print("Study statistics: ")
     print("  Number of finished trials: ", len(study.trials))
