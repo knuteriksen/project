@@ -13,6 +13,25 @@ for experient_number, path_to_experiment in enumerate(list_experiments):
     print(f"Experiment: {experient_number} -- {path_to_experiment}")
     # path_to_experiment = "/home/knut/ray_results/b_000"
 
+    best_experiment_analysis = Analysis(
+        path_to_experiment,
+        default_metric="mean_square_error",
+        default_mode="min"
+    )
+
+    best_experiment_config = best_experiment_analysis.get_best_config(metric="mean_square_error", mode="min")
+    best_experiment_logdir = best_experiment_analysis.get_best_logdir(metric="mean_square_error", mode="min")
+    best_experiment_checkpoint_path = best_experiment_analysis.get_best_checkpoint(
+        trial=best_experiment_logdir,
+        metric="mean_square_error",
+        mode="min"
+    )
+
+    best_experiment_model = config_to_model(config=best_experiment_config,
+                                            checkpoint_path=best_experiment_checkpoint_path)
+
+    best_experiment_mse = test_model(model=best_experiment_model, batch_size=best_experiment_config["batch_size"])
+
     list_experiment_trials = [f.path for f in os.scandir(path_to_experiment) if f.is_dir()]
     list_experiment_trials.sort(key=lambda x: x.split("_")[4])
 
@@ -28,3 +47,4 @@ for experient_number, path_to_experiment in enumerate(list_experiments):
         best_trial_model = config_to_model(config=best_trial_config, checkpoint_path=best_trial_checkpoint_path)
 
         best_trial_test_mse = test_model(model=best_trial_model, batch_size=best_trial_config["batch_size"])
+        # TODO: Write best_trial_test_mse to file
