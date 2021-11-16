@@ -41,7 +41,7 @@ def optimize(config: {}, iterations: int, experiment_name: str):
         resources_per_trial={"cpu": 8, "gpu": 0},
         verbose=1,
         checkpoint_score_attr="min-mean_square_error",
-        keep_checkpoints_num=0,
+        keep_checkpoints_num=1,
     )
 
     best_trial = result.get_best_trial("mean_square_error", "min", "all")

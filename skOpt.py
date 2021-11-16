@@ -41,7 +41,8 @@ def objective(**params):
         inputs=len(inputs),
         hidden_layers=params.get("hidden_layers"),
         hidden_layer_width=params.get("hidden_layer_width"),
-        outputs=len(outputs)
+        outputs=len(outputs),
+        dropout_value=0.0
     )
 
     # Define loss and optimizer

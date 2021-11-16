@@ -3,7 +3,7 @@ import torch
 
 
 class Net(torch.nn.Module):
-    def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int, dropout_value=0.0):
+    def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int, dropout_value: float):
         """
 
         :param inputs: Number of inputs

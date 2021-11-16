@@ -27,7 +27,8 @@ def objective(trial: Trial):
         len(inputs),
         hidden_layers,
         hidden_layer_width,
-        len(outputs)
+        len(outputs),
+        dropout_value=0.0
     )
 
     # Define loss and optimizer

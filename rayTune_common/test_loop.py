@@ -18,7 +18,8 @@ def test_best_model(best_trial):
         len(ins),
         int(best_trial.config["hidden_layers"]),
         int(best_trial.config["hidden_layer_width"]),
-        len(outs)
+        len(outs),
+        dropout_value=0.0
     )
 
     device = "cpu"
@@ -26,6 +27,7 @@ def test_best_model(best_trial):
     best_trained_model.to(device)
 
     checkpoint_path = os.path.join(best_trial.checkpoint.value, "checkpoint")
+    print(checkpoint_path)
 
     model_state, optimizer_state = torch.load(checkpoint_path)
     best_trained_model.load_state_dict(model_state)
