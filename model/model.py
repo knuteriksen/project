@@ -1,3 +1,7 @@
+"""
+This file contains the neural network model
+"""
+
 import numpy as np
 import torch
 
@@ -6,6 +10,7 @@ class Net(torch.nn.Module):
     def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int, dropout_value: float):
         """
 
+        :param dropout_value: Dropout value to use. 0.0 If no dropout is desired
         :param inputs: Number of inputs
         :param hidden_layers: Number of hidden layers
         :param hidden_layer_width: Size of hidden layer
@@ -36,6 +41,7 @@ class Net(torch.nn.Module):
             # Add to list
             linear_layers.append(layer)
 
+            # Add possible dropout
             if dropout_value:
                 linear_layers.append(torch.nn.Dropout(dropout_value))
 

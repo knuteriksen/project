@@ -5,7 +5,7 @@ from ray import tune
 from ray.tune.suggest.optuna import OptunaSearch
 
 from rayTune_common.constants import random_seed
-from rayTune_common.test_loop import test_best_model
+from rayTune_common.test_loop import get_best_trial, trail_to_model, test_model
 from rayTune_common.training_loop import train
 
 
@@ -44,9 +44,10 @@ def optimize(config: {}, iterations: int, experiment_name: str):
         keep_checkpoints_num=1,
     )
 
-    best_trial = result.get_best_trial("mean_square_error", "min", "all")
+    best_trial = get_best_trial(result)
     print("Best trial config: {}".format(best_trial.config))
     print("Best trial best mean square error: {}".format(
         best_trial.last_result["mean_square_error"]))
 
-    test_best_model(best_trial=best_trial)
+    best_trial_model = trail_to_model(best_trial)
+    test_model(model=best_trial_model, batch_size=best_trial.config["batch_size"])

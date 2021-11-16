@@ -52,7 +52,7 @@ def train(config, checkpoint_dir=None):
 
     # Train Network
     best_mse = np.inf
-    for epoch in range(int(config["epochs"])):
+    for epoch in range(100):
         net.train()
         for inputs, labels in train_loader:
             # Zero the parameter gradients (from last iteration)

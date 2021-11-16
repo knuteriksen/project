@@ -1,8 +1,11 @@
+"""
+This file contains the different configuration spaces for the HPO search
+"""
+
 from ray import tune
 
-config7 = {
+config6 = {
     "lr": tune.loguniform(1e-5, 1e-1),
-    "epochs": tune.quniform(70, 130, 10),
     "batch_size": tune.choice([4, 8, 16, 32, 64]),
     "hidden_layers": tune.quniform(2, 10, 1),
     "hidden_layer_width": tune.quniform(30, 60, 5),
