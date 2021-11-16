@@ -6,8 +6,9 @@ from ray.tune.suggest import ConcurrencyLimiter
 from ray.tune.suggest.bayesopt import BayesOptSearch
 
 from rayTune_common.constants import random_seed
-from rayTune_common.test_loop import get_best_trial, trail_to_model, test_model
-from rayTune_common.training_loop import train
+from rayTune_common.test import test_model
+from rayTune_common.train import train
+from rayTune_common.utils import get_best_trial, trial_to_model
 
 
 def optimize(config: {}, iterations: int):
@@ -45,5 +46,5 @@ def optimize(config: {}, iterations: int):
     print("Best trial best mean square error: {}".format(
         best_trial.last_result["mean_square_error"]))
 
-    best_trial_model = trail_to_model(best_trial)
+    best_trial_model = trial_to_model(best_trial)
     test_model(model=best_trial_model, batch_size=best_trial.config["batch_size"])

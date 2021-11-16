@@ -12,8 +12,8 @@ from rayTune_common.constants import ins, outs, random_seed
 def train(config, checkpoint_dir=None):
     """
 
-    :param config:
-    :param checkpoint_dir:
+    :param config: hyperparameter configuration
+    :param checkpoint_dir: local checkpoint dir. Leave blank to use ~/ray_resuluts
     :return:
     """
     np.random.seed(random_seed)
@@ -53,7 +53,9 @@ def train(config, checkpoint_dir=None):
     # Train Network
     best_mse = np.inf
     for epoch in range(100):
+        # specify that we are in training mode
         net.train()
+
         for inputs, labels in train_loader:
             # Zero the parameter gradients (from last iteration)
             optimizer.zero_grad()
@@ -76,8 +78,10 @@ def train(config, checkpoint_dir=None):
             # Update parameters using gradient
             optimizer.step()
 
-        # Evaluate model on validation data
+        # Specify that we are in evaluation mode
         net.eval()
+
+        # Evaluate model on validation data
         mse_val = 0
         for inputs, labels in val_loader:
             mse_val += torch.sum(torch.pow(labels - net(inputs), 2)).item()
