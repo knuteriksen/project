@@ -21,11 +21,9 @@ for experient_number, path_to_experiment in enumerate(list_experiments):
 
     best_experiment_config = best_experiment_analysis.get_best_config(metric="mean_square_error", mode="min")
     best_experiment_logdir = best_experiment_analysis.get_best_logdir(metric="mean_square_error", mode="min")
-    best_experiment_checkpoint_path = best_experiment_analysis.get_best_checkpoint(
-        trial=best_experiment_logdir,
-        metric="mean_square_error",
-        mode="min"
-    )
+    list_best_experiment_logdir_checkpoints = [f.path for f in os.scandir(best_experiment_logdir) if f.is_dir()]
+    list_best_experiment_logdir_checkpoints.sort(key=lambda x: x.split("_")[-1])
+    best_experiment_checkpoint_path = os.path.join(list_best_experiment_logdir_checkpoints[-1], "checkpoint")
 
     best_experiment_model = config_to_model(config=best_experiment_config,
                                             checkpoint_path=best_experiment_checkpoint_path)
