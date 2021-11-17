@@ -67,7 +67,8 @@ def main(argv):
 
         elif current_argument in "-o":
             print(f"Running Optuna with {its} iterations")
-            run_optuna(config=config, iterations=its, experiment_name="optuna_smoke_test")
+            run_optuna(config=config, iterations=its, experiment_name="optuna_smoke_test",
+                       logdir="/home/knut/ray_results")
 
         elif current_argument in "-r":
             print(f"Running Random with {its} iterations")

@@ -7,7 +7,14 @@ import torch
 
 
 class Net(torch.nn.Module):
-    def __init__(self, inputs: int, hidden_layers: int, hidden_layer_width: int, outputs: int, dropout_value: float):
+    def __init__(
+            self,
+            inputs: int,
+            hidden_layers: int,
+            hidden_layer_width: int,
+            outputs: int,
+            dropout_value: float
+    ):
         """
 
         :param dropout_value: Dropout value to use. 0.0 If no dropout is desired

@@ -21,7 +21,7 @@ def train(config, checkpoint_dir=None):
 
     dropout_value = 0.0
     if config["dropout"]:
-        dropout_value = 0.3
+        dropout_value = 0.25
 
     net = Net(
         len(ins),
