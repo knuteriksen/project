@@ -4,13 +4,11 @@ from optuna.integration import SkoptSampler
 from ray import tune
 from ray.tune.suggest.optuna import OptunaSearch
 
-from rayTune_common.constants import random_seed
-from rayTune_common.test import test_model
+from rayTune_common.constants import random_seed, metric, mode
 from rayTune_common.train import train
-from rayTune_common.utils import get_best_trial, trial_to_model
 
 
-def optimize(config: {}, iterations: int, experiment_name: str):
+def optimize(config: {}, iterations: int, experiment_name: str, logdir: str):
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
 
@@ -25,8 +23,8 @@ def optimize(config: {}, iterations: int, experiment_name: str):
 
     algo = OptunaSearch(
         sampler=sampler,
-        metric="mean_square_error",
-        mode="min",
+        metric=metric,
+        mode=mode,
     )
 
     # algo = ConcurrencyLimiter(algo, max_concurrent=1)
@@ -35,20 +33,23 @@ def optimize(config: {}, iterations: int, experiment_name: str):
         tune.with_parameters(train),
         name=experiment_name,
         config=config,
-        metric="mean_square_error",
-        mode="min",
+        metric=metric,
+        mode=mode,
         search_alg=algo,
         num_samples=iterations,
         resources_per_trial={"cpu": 8, "gpu": 0},
         verbose=1,
         checkpoint_score_attr="min-mean_square_error",
         keep_checkpoints_num=1,
+        local_dir=logdir
     )
 
+    """
     best_trial = get_best_trial(result)
     print("Best trial config: {}".format(best_trial.config))
     print("Best trial best mean square error: {}".format(
-        best_trial.last_result["mean_square_error"]))
+        best_trial.last_result[metric]))
 
     best_trial_model = trial_to_model(best_trial)
     test_model(model=best_trial_model, batch_size=best_trial.config["batch_size"])
+    """

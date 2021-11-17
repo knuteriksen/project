@@ -46,10 +46,10 @@ def test_model(model: Net, batch_size):
     pred_test = model(x_test)
 
     # Compute MSE, MAE and MAPE on test data
-    print('Error on test data')
+    # print('Error on test data')
 
     mse_test = torch.mean(torch.pow(pred_test - y_test, 2))
-    print(f'MSE: {mse_test.item()}')
+    # print(f'MSE: {mse_test.item()}')
 
     """
     mae_test = torch.mean(torch.abs(pred_test - y_test))
