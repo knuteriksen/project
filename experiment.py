@@ -9,7 +9,7 @@ def experiment():
         experiment_name = "experiment_" + str(i).rjust(3, "0")
         run_optuna(
             config=config6,
-            iterations=10,
+            iterations=100,
             experiment_name=experiment_name,
             logdir=logdir_6
         )
@@ -19,7 +19,7 @@ def experiment():
         experiment_name = "experiment_" + str(i).rjust(3, "0")
         run_optuna(
             config=config5,
-            iterations=10,
+            iterations=100,
             experiment_name=experiment_name,
             logdir=logdir_5
         )
