@@ -1,14 +1,16 @@
 import os
 
+import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from ray.tune import Analysis
 
-from rayTune_common.constants import logdir_6, metric, mode
+from rayTune_common.constants import metric, mode
 from rayTune_common.test import test_model
 from rayTune_common.utils import config_to_model
 
 data = []
-path_to_run_results = logdir_6
+path_to_run_results = "/home/knut/Documents/knut/run6"
 path_to_csv = "/home/knut/results/run6/results.csv"
 
 list_experiments = [f.path for f in os.scandir(path_to_run_results) if f.is_dir()]
@@ -41,5 +43,20 @@ for experient_number, path_to_experiment in enumerate(list_experiments):
 df = pd.DataFrame(data)
 df["best"] = df.min(axis=1)
 df.loc["mean"] = df.mean(axis=0)
+df.loc["var"] = df.var(axis=0)
 print(df)
 df.to_csv(path_to_csv)
+mean_anal = []
+mean = df.loc["mean"]
+
+for i in range(len(mean)):
+    if i == 0:
+        mean_anal.append(mean[i])
+    else:
+        if mean[i] < mean_anal[i - 1]:
+            mean_anal.append(mean[i])
+        else:
+            mean_anal.append(mean_anal[i - 1])
+
+sns.lineplot(data=mean_anal)
+plt.show()
