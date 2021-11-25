@@ -10,8 +10,8 @@ from rayTune_common.test import test_model
 from rayTune_common.utils import config_to_model
 
 data = []
-path_to_run_results = "/home/knut/Documents/project/run_results/run6"
-path_to_csv = "/home/knut/Documents/project/run_results/run6/results.csv"
+path_to_run_results = "/run_results_test/run6"
+path_to_csv = "/run_results_test/run6/results.csv"
 
 list_experiments = [f.path for f in os.scandir(path_to_run_results) if f.is_dir()]
 list_experiments.sort(key=lambda x: x.split("_")[-1])
