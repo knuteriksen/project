@@ -16,7 +16,6 @@ class Net(torch.nn.Module):
             dropout_value: float
     ):
         """
-
         :param dropout_value: Dropout value to use. 0.0 If no dropout is desired
         :param inputs: Number of inputs
         :param hidden_layers: Number of hidden layers
@@ -48,8 +47,10 @@ class Net(torch.nn.Module):
             # Add to list
             linear_layers.append(layer)
 
-            # Add possible dropout
-            if dropout_value:
+            # Add possible dropout to input
+            # We do not add dropout before input layer: i = 0
+            # We do not add dropout before hidden layer 1: i = 1
+            if dropout_value and i > 1:
                 linear_layers.append(torch.nn.Dropout(dropout_value))
 
         # Modules/layers must be registered to enable saving of notebooks
@@ -60,7 +61,6 @@ class Net(torch.nn.Module):
 
     def forward(self, input):
         """
-
         Forward pass to evaluate network for input values
         :param input: tensor assumed to be of size (batch_size, n_inputs)
         :return: output tensor

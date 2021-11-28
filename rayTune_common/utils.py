@@ -32,11 +32,10 @@ def trial_to_model(trial: Trial):
     )
 
     device = "cpu"
+    model = model.eval()
     model.to(device)
 
     checkpoint_path = os.path.join(trial.checkpoint.value, "checkpoint")
-    print(checkpoint_path)
-
     model_state, optimizer_state = torch.load(checkpoint_path)
     model.load_state_dict(model_state)
 
@@ -53,6 +52,7 @@ def config_to_model(config: {}, checkpoint_path: str):
     )
 
     device = "cpu"
+    model = model.eval()
     model.to(device)
     model_state, optimizer_state = torch.load(checkpoint_path)
     model.load_state_dict(model_state)
