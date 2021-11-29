@@ -2,5 +2,4 @@
 *
 # Except
 !.gitignore
-!results.csv
-!config.csv
+!*.csv
