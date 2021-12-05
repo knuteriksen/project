@@ -1,8 +1,3 @@
-"""
-This file contains the neural network model
-"""
-
-import numpy as np
 import torch
 
 

@@ -11,18 +11,8 @@
 
 ## Running Experiment
 
-`python3 main.py -x 1`
-This will run the optimization loop 25 times, with 100 optimization iterations each time
+Run the notebooks `expXx_y.ipynb`
 
-## Tensorbard
+## Tensorbard visualization
 
-`tensorboard --logdir=~/ray_results/Test\ SkOpt/`
-
-## Runnnig Smoke Tests
-
-Checkout commit `57b87f89bb643abdc1965b8273658fb3069eedfd`:`random search added` to run smoke tests
-
-With Scikit Optimize: `python3 main.py -s 10`  
-With Bayesian Optimization: `python3 main.py -b 10`  
-With Optuna and Scikit Optimize: `python3 main.py -o 10`  
-With Random serach: `python3 main.py -r 10`
+`tensorboard --logdir=path_to_log_dir`

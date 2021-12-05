@@ -6,12 +6,17 @@ random_seed = 12345
 ins = ['CHK', 'PWH', 'PDC', 'TWH', 'FGAS', 'FOIL']
 outs = ['QTOT']
 
-logdir_6 = "/home/knut/ray_results/run6"
-logdir_5 = "/home/knut/ray_results/run5"
-logdir_4 = "/home/knut/ray_results/run4"
-logdir_3 = "/home/knut/ray_results/run3"
-logdir_2 = "/home/knut/ray_results/run2"
-logdir_1 = "/home/knut/ray_results/run1"
+bo_logdir_5 = "UnseededRun_results/run5"
+bo_logdir_4 = "UnseededRun_results/run4"
+bo_logdir_3 = "UnseededRun_results/run3"
+bo_logdir_2 = "UnseededRun_results/run2"
+bo_logdir_1 = "UnseededRun_results/run1"
+
+rs_logdir_5 = "UnseededRun_results/rs5"
+rs_logdir_4 = "UnseededRun_results/rs4"
+rs_logdir_3 = "UnseededRun_results/rs3"
+rs_logdir_2 = "UnseededRun_results/rs2"
+rs_logdir_1 = "UnseededRun_results/rs1"
 
 metric = "mean_square_error"
 mode = "min"
