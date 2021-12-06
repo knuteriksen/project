@@ -1,4 +1,5 @@
 import pandas as pd
+import torch
 
 from rayTune_common.constants import random_seed
 
@@ -40,3 +41,49 @@ def split_data():
     # Write test set to csv
     path = "/home/knut/Documents/project/dataset/test_set.csv"
     test_set.to_csv(path)
+
+
+def prepare_data(
+        input_cols: [],
+        output_cols: [],
+        train_batch_size: int
+):
+    """
+    Prepares the dataset to be used for HPO
+    Converts to torch tensors and dataset loaders
+    :param input_cols: list of strings
+    :param output_cols: list of strings
+    :param train_batch_size: Batch size
+    :return:
+    :return: train_loader, x_val, y_val, val_loader, x_test, y_test
+    """
+    # INPUT_COLS = ['CHK', 'PWH', 'PDC', 'TWH', 'FGAS', 'FOIL']
+    # OUTPUT_COLS = ['QTOT']
+
+    path = "dataset/training_set.csv"
+    train_set = pd.read_csv(path, index_col=0)
+    path = "dataset/validation_set.csv"
+    val_set = pd.read_csv(path, index_col=0)
+    path = "dataset/test_set.csv"
+    test_set = pd.read_csv(path, index_col=0)
+
+    # Get input and output tensors and convert them to torch tensors
+    x_train = torch.from_numpy(train_set[input_cols].values).to(torch.float)
+    y_train = torch.from_numpy(train_set[output_cols].values).to(torch.float)
+
+    x_val = torch.from_numpy(val_set[input_cols].values).to(torch.float)
+    y_val = torch.from_numpy(val_set[output_cols].values).to(torch.float)
+
+    # Create dataset loaders
+    # Here we specify the batch size and if the dataset should be shuffled
+    train_dataset = torch.utils.data.TensorDataset(x_train, y_train)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=train_batch_size, shuffle=True)
+
+    val_dataset = torch.utils.data.TensorDataset(x_val, y_val)
+    val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=len(val_set), shuffle=False)
+
+    # Get input and output as torch tensors
+    x_test = torch.from_numpy(test_set[input_cols].values).to(torch.float)
+    y_test = torch.from_numpy(test_set[output_cols].values).to(torch.float)
+
+    return train_loader, x_val, y_val, val_loader, x_test, y_test

@@ -1,4 +1,4 @@
-name: ttk28
+name: hpo
 dependencies:
   - python=3.8
   - numpy
