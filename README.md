@@ -18,7 +18,10 @@ The Bayesian Optimization experiment is divided into four notebooks:
 - expBo_3.ipynb
 - expBo_4.ipynb
 
-This was done to run the experiment simultaneously at 4 different computers, to reduce time.
+This was done to run the experiment simultaneously at 4 different computers, to reduce time.  
+
+The random search is found in
+- expRs_1.ipynb
 
 ## rayTune_common
 
@@ -38,7 +41,8 @@ This folder contains the results of the experiment
 
 - `analysis.ipynb` - Extracts results, trains on validation set, and evaluates test MSE
 - `plots.ipynb` - Used to make plots
-- `table.ipynb` - Used to make a csv file to convert into latex table
+- `table.ipynb` - Used to make a csv file of the result to convert into latex table
+- `config_tables.ipynb` - Used to make a csv file of the resulting configuration spaces to convert into latex table
 
 ## Preprocessing
 
